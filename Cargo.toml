@@ -3,7 +3,23 @@ name = "smmo-api"
 version = "0.1.0"
 authors = ["Ben Luelo <benluelo@hotmail.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serenity = { version = "0.10.5", optional = true }
+serde = "1.0.125"
+serde_json = "1.0.62"
+log = { version = "0.4.14", optional = true }
+dotenv = { version = "0.15.0", optional = true }
+#  = ""
+tokio = "1.2.0"
+reqwest = { version = "0.11.2", features = ["json"] }
+chrono = "0.4.19"
+
+[features]
+default = ["log"]
+discord = ["serenity"]
+env = ["dotenv"]
+logging = ["log"]
