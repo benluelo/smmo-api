@@ -1,11 +1,7 @@
+pub mod item;
+pub mod orphanage;
 pub mod smmo_player;
 pub mod world_boss;
-mod orphanage;
-mod item;
-
-#[cfg(feature = "discord")]
-use crate::models::world_boss::WorldBoss;
-use serenity::builder::CreateEmbed;
 
 pub trait SmmoModel {
     const TYPE_NAME: &'static str;

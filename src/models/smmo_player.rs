@@ -2,7 +2,7 @@ use crate::{
     custom_serde::{bool_from_int, date_time_option::*},
     models::SmmoModel,
 };
-use chrono::{serde::ts_seconds_option, DateTime, Duration, NaiveDateTime, Utc};
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
