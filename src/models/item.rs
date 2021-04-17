@@ -1,3 +1,6 @@
+use core::fmt;
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -58,6 +61,12 @@ pub struct ItemId(u64);
 
 impl SmmoModel for Item {
     const TYPE_NAME: &'static str = "Item";
+}
+
+impl Display for Item {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&serde_json::to_string_pretty(&self).map_err(|_| fmt::Error)?)
+    }
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Deserialize, Serialize)]

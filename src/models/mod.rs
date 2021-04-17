@@ -1,9 +1,13 @@
+use std::fmt::Display;
+
+use serde::{Serialize, de::DeserializeOwned};
+
 pub mod item;
 pub mod orphanage;
 pub mod smmo_player;
 pub mod world_boss;
 
-pub trait SmmoModel {
+pub trait SmmoModel: Display + Serialize + DeserializeOwned {
     const TYPE_NAME: &'static str;
 }
 

@@ -1,12 +1,13 @@
 use chrono::{DateTime, TimeZone, Utc};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer};
 
-pub fn serialize_option_datefmt<S: Serializer>(
-    time: &DateTime<Utc>,
-    serializer: S,
-) -> Result<S::Ok, S::Error> {
-    time.to_rfc3339().serialize(serializer)
-}
+// pub fn serialize_option_datefmt<S: Serializer>(
+//     time: &Option<DateTime<Utc>>,
+//     serializer: S,
+// ) -> Result<S::Ok, S::Error> {
+//     time.map(|dt| dt.to_rfc3339().serialize(serializer))
+//         .or("".serialize(serializer))
+// }
 
 const FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 

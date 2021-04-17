@@ -1,3 +1,5 @@
+use std::fmt::{self, Display};
+
 use chrono::{serde::ts_seconds, DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -21,4 +23,23 @@ pub struct WorldBoss {
 
 impl SmmoModel for WorldBoss {
     const TYPE_NAME: &'static str = "WorldBoss";
+}
+
+impl Display for WorldBoss {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&serde_json::to_string_pretty(&self).map_err(|_| fmt::Error)?)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct WorldBosses(pub Vec<WorldBoss>);
+
+impl SmmoModel for WorldBosses {
+    const TYPE_NAME: &'static str = "Vec<WorldBoss>";
+}
+
+impl Display for WorldBosses {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&serde_json::to_string_pretty(&self).map_err(|_| fmt::Error)?)
+    }
 }

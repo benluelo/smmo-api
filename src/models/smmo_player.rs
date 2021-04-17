@@ -1,54 +1,59 @@
+use std::fmt::{self, Display};
+
 use crate::{
     custom_serde::{bool_from_int, date_time_option::*},
     models::SmmoModel,
 };
 use chrono::{DateTime, Utc};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize)]
-pub(crate) struct SmmoPlayer {
-    id: UserId,
-    name: String,
-    level: u32,
-    motto: String,
-    profile_number: String,
-    exp: u32,
-    gold: u32,
-    steps: u32,
-    npc_kills: u32,
-    user_kills: u32,
-    quests_complete: u32,
-    dex: u32,
-    def: u32,
-    str: u32,
-    bonus_dex: u32,
-    bonus_def: u32,
-    bonus_str: u32,
-    hp: u32,
-    max_hp: u32,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SmmoPlayer {
+    pub id: UserId,
+    pub name: String,
+    pub level: u32,
+    pub motto: String,
+    pub profile_number: String,
+    pub exp: u32,
+    pub gold: u32,
+    pub steps: u32,
+    pub npc_kills: u32,
+    pub user_kills: u32,
+    pub quests_complete: u32,
+    pub dex: u32,
+    pub def: u32,
+    pub str: u32,
+    pub bonus_dex: u32,
+    pub bonus_def: u32,
+    pub bonus_str: u32,
+    pub hp: u32,
+    pub max_hp: u32,
     #[serde(rename = "safeMode")]
     #[serde(deserialize_with = "bool_from_int::deserialize")]
-    safe_mode: bool,
+    pub safe_mode: bool,
     #[serde(rename = "safeModeTime")]
-    #[serde(
-        deserialize_with = "deserialize_option_datefmt",
-        serialize_with = "serialize_option_datefmt"
-    )]
-    safe_mode_time: Option<DateTime<Utc>>,
-    background: u32,
-    membership: u32,
-    guild: Option<SmmoPlayerGuild>,
+    #[serde(deserialize_with = "deserialize_option_datefmt")]
+    pub safe_mode_time: Option<DateTime<Utc>>,
+    pub background: u32,
+    pub membership: u32,
+    pub guild: Option<SmmoPlayerGuild>,
 }
 
 impl SmmoModel for SmmoPlayer {
     const TYPE_NAME: &'static str = "SmmoPlayer";
 }
 
-#[derive(Debug, Deserialize)]
+impl Display for SmmoPlayer {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&serde_json::to_string_pretty(&self).map_err(|_| fmt::Error)?)
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UserId(u32);
 
-#[derive(Debug, Deserialize)]
-pub(crate) struct SmmoPlayerGuild {
-    id: u32,
-    name: String,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SmmoPlayerGuild {
+    pub id: u32,
+    pub name: String,
 }
