@@ -19,8 +19,12 @@ dotenv = { version = "0.15.0", optional = true }
 tokio = "1.2.0"
 reqwest = { version = "0.11.2", features = ["json"] }
 chrono = { version = "0.4.19", features = ["serde"] }
+sqlx = { version = "0.5.2", features = ["postgres"], optional = true }
+
+serde_test = "1.0.125"
 
 [features]
+sql = ["sqlx"]
 default = ["logging"]
 env = ["dotenv"]
 logging = ["log"]
