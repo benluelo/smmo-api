@@ -8,12 +8,17 @@ use crate::{
     models::SmmoModel,
 };
 
+// #[cfg(feature = "sql")]
+// use sqlx;
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "sql", derive(sqlx::FromRow))]
 pub struct Item {
     pub id: ItemId,
 
     pub name: String,
 
+    #[cfg_attr(feature = "sql", sqlx(rename = "type"))]
     #[serde(rename = "type")]
     pub item_type: ItemType,
 
@@ -57,6 +62,7 @@ pub struct Item {
     pub locked: bool,
 }
 
+// #[repr(transparent)]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Deserialize, Serialize)]
 #[cfg_attr(feature = "sql", derive(sqlx::Type))]
 #[cfg_attr(feature = "sql", sqlx(transparent))]
@@ -114,6 +120,9 @@ pub enum ItemType {
     Background,
     // see: item 12653
     Diamonds,
+    #[cfg_attr(feature = "sql", sqlx(rename = "Event Item"))]
+    #[serde(rename = "Event Item")]
+    EventItem,
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Deserialize, Serialize)]
@@ -130,6 +139,36 @@ pub enum ItemRarity {
     Legendary,
     Exotic,
     Celestial,
+}
+
+impl Display for ItemRarity {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            ItemRarity::Common => "Common",
+            ItemRarity::Uncommon => "Uncommon",
+            ItemRarity::Rare => "Rare",
+            ItemRarity::Epic => "Epic",
+            ItemRarity::Elite => "Elite",
+            ItemRarity::Legendary => "Legendary",
+            ItemRarity::Exotic => "Exotic",
+            ItemRarity::Celestial => "Celestial",
+        })
+    }
+}
+
+impl ItemRarity {
+    pub fn colour(&self) -> u32 {
+        match self {
+            ItemRarity::Common => 0x34495E,
+            ItemRarity::Uncommon => 0x2980B9,
+            ItemRarity::Rare => 0xE67E22,
+            ItemRarity::Epic => 0x8E44AD,
+            ItemRarity::Elite => 0xC0392B,
+            ItemRarity::Legendary => 0xF1C40F,
+            ItemRarity::Exotic => 0x27AE60,
+            ItemRarity::Celestial => 0x00F6FF,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Deserialize, Serialize)]
@@ -176,7 +215,7 @@ mod test_item_deserialize {
                 id: ItemId(1),
                 name: "Wooden Stick".to_string(),
                 item_type: ItemType::Weapon,
-                description: Some("".to_string()),
+                description: None,
                 equipable: true,
                 level: 1,
                 rarity: ItemRarity::Common,

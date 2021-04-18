@@ -255,6 +255,34 @@ mod test_internal_smmo_result_deserialize {
     }
 
     #[test]
+    fn test_unauthenticated() {
+        let json = r#"{
+            "error": "unauthenticated"
+        }"#;
+
+        assert!(matches!(
+            serde_json::from_str::<InternalSmmoResult<Orphanage>>(json).unwrap(),
+            InternalSmmoResult::Err(SmmoError::ApiError {
+                error: ApiErrorType::Unauthenticated
+            }),
+        ));
+    }
+
+    #[test]
+    fn test_unauthenticated_api_error() {
+        let json = r#"{
+            "error": "unauthenticated"
+        }"#;
+
+        assert!(matches!(
+            serde_json::from_str::<SmmoError<Orphanage>>(json).unwrap(),
+            SmmoError::ApiError {
+                error: ApiErrorType::Unauthenticated
+            },
+        ));
+    }
+
+    #[test]
     fn test_api_error_type_unauthenticated() {
         let json = r#""unauthenticated""#;
         assert_eq!(
