@@ -125,6 +125,38 @@ pub enum ItemType {
     EventItem,
 }
 
+impl Display for ItemType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            ItemType::Weapon => "Weapon",
+            ItemType::Helmet => "Helmet",
+            ItemType::Amulet => "Amulet",
+            ItemType::Armour => "Armour",
+            ItemType::Shield => "Shield",
+            ItemType::Greaves => "Greaves",
+            ItemType::Boots => "Boots",
+            ItemType::Special => "Special",
+            ItemType::Pet => "Pet",
+            ItemType::WoodAxe => "WoodAxe",
+            ItemType::Pickaxe => "Pickaxe",
+            ItemType::FishingRod => "FishingRod",
+            ItemType::Shovel => "Shovel",
+            ItemType::Material => "Material",
+            ItemType::Food => "Food",
+            ItemType::Other => "Other",
+            ItemType::Collectable => "Collectable",
+            ItemType::Avatar => "Avatar",
+            ItemType::Sprite => "Sprite",
+            ItemType::ItemSprite => "ItemSprite",
+            ItemType::Grenade => "Grenade",
+            ItemType::Book => "Book",
+            ItemType::Background => "Background",
+            ItemType::Diamonds => "Diamonds",
+            ItemType::EventItem => "EventItem",
+        })
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Deserialize, Serialize)]
 #[cfg_attr(feature = "sql", derive(sqlx::Type))]
 #[cfg_attr(feature = "sql", sqlx(type_name = "item_rarity"))]
@@ -157,7 +189,7 @@ impl Display for ItemRarity {
 }
 
 impl ItemRarity {
-    pub fn colour(&self) -> u32 {
+    pub fn colour_hex(&self) -> u32 {
         match self {
             ItemRarity::Common => 0x34495E,
             ItemRarity::Uncommon => 0x2980B9,
@@ -168,6 +200,16 @@ impl ItemRarity {
             ItemRarity::Exotic => 0x27AE60,
             ItemRarity::Celestial => 0x00F6FF,
         }
+    }
+
+    pub fn colour_rgb(&self) -> (u8, u8, u8) {
+        let hex = self.colour_hex();
+
+        let r = ((hex >> 16) & 255) as u8;
+        let g = ((hex >> 8) & 255) as u8;
+        let b = (hex & 255) as u8;
+
+        (r, g, b)
     }
 }
 
